@@ -1,0 +1,1 @@
+A simple Streamlit server displaying the data scraped from sreality. PostgreSQL on the backend
