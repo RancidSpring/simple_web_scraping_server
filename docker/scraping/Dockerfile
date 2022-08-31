@@ -24,4 +24,5 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 COPY ../.. .
 
 # Run the crawler when the container launches.
+RUN chmod +x run_crawl.sh
 ENTRYPOINT ["./run_crawl.sh"]
