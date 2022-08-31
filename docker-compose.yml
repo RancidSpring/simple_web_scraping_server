@@ -39,7 +39,7 @@ services:
       - postgres
       - sreality_scraping
     ports:
-      - "8501:8501"
+      - "8080:8080"
     networks:
       - my_network
 
