@@ -8,13 +8,14 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_HOST_AUTH_METHOD=md5
     command: postgres -c listen_addresses='*'
+    user: postgres
     volumes:
       - db:/var/lib/postgresql/data
       - ./db/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
     ports:
       - "5432:5432"
     networks:
-      - default
+      - my_network
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready" ]
       interval: 10s
@@ -23,21 +24,28 @@ services:
 
   sreality_scraping:
     build:
-      dockerfile: Dockerfile
+      dockerfile: docker/scraping/Dockerfile
       context: .
     depends_on:
       - postgres
     networks:
-      - default
-#    ports:
-#      - 8761:8761
-#    networks:
-#      - default
+      - my_network
+
+  streamlit:
+    build:
+      dockerfile: docker/streamlit/Dockerfile
+      context: .
+    depends_on:
+      - postgres
+      - sreality_scraping
+    ports:
+      - "8501:8501"
+    networks:
+      - my_network
 
 volumes:
   db:
     driver: "local"
 
 networks:
-  default:
-    driver: bridge
+  my_network:
